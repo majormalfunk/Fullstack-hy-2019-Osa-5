@@ -17,17 +17,14 @@ const Togglable = React.forwardRef((props, ref) => {
     }
   })
   return (
-    <>
-      <tr id={hidden} onClick={toggleVisibility}>
-        {props.showAlways}
-      </tr>
-      <tr id={shown} onClick={toggleVisibility}>
-        {props.showAlways}
-      </tr>
-      <tr id={shown} onClick={toggleVisibility}>
+    <div>
+      <div id={hidden} onClick={toggleVisibility}>
+        {props.showCollapsed}
+      </div>
+      <div id={shown} onClick={toggleVisibility}>
         {props.children}
-      </tr>
-    </>
+      </div>
+    </div>
   )
 })
 

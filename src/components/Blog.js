@@ -1,43 +1,46 @@
 import React from 'react'
 import Togglable from './Togglable'
-import blogs from '../services/blogs';
 
 
 const Blog = ({ blog }) => {
 
-  const toggRef = React.createRef()
+  const detailsRef = React.createRef()
 
   const BlogTitle = () => {
     return (
-      <tr>
-        <td>{blog.title} by {blog.author}</td>
-      </tr>
+      <div>{blog.title} by {blog.author}</div>
     )
   }
 
   const AddedBy = () => {
-    if (blog.user) {
+    if (blog.hasOwnProperty('user')) {
       return (
-        <tr>
-          <td>Added by {blogs.user.name}</td>
-        </tr>
-
+        <td>Added by {blog.user.name}</td>
       )
+    } else {
+      return <td>&nbsp;</td>
     }
   }
 
   return (
-
-    < Togglable showAlways={BlogTitle()} shownStyle="detailsshown" ref={toggRef} >
-      <tr>
-        <td><a href={blog.url}>{blog.url}</a></td>
-      </tr>
-      <tr>
-        <td>{blog.likes} likes <button type="submit">Like</button></td>
-      </tr>
-      {AddedBy()}
-    </Togglable >
-
+    <div width="80%">
+      <Togglable showCollapsed={BlogTitle()} shownStyle="detailsshown" ref={detailsRef} >
+        <div>{blog.title} by {blog.author}</div>
+        <table>
+          <tbody>
+            <tr>
+              <td><a href={blog.url}>{blog.url}</a></td>
+            </tr>
+            <tr>
+              <td>{blog.likes} likes <button type="submit">Like</button></td>
+            </tr>
+            <tr>
+              {AddedBy()}
+            </tr>
+          </tbody>
+        </table>
+      </Togglable >
+    </div>
   )
 
 }

@@ -7,6 +7,7 @@ const Blogs = (props) => {
   const [newTitle, setNewTitle] = useState('')
   const [newAuthor, setNewAuthor] = useState('')
   const [newURL, setNewURL] = useState('')
+  const [showForm, setShowForm] = useState(false)
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -27,6 +28,10 @@ const Blogs = (props) => {
   const handleURLChange = (event) => {
     //console.log("URL:", event.target.value)
     setNewURL(event.target.value)
+  }
+
+  const handleShowForm = (event) => {
+    setShowForm(!showForm)
   }
 
   const addBlog = (event) => {
@@ -59,48 +64,72 @@ const Blogs = (props) => {
   const blogList = () => {
     return (
       <div>
-        <table>
-          <tbody>
-            {blogs.map(blog =>
-              <Blog key={blog.id} blog={blog} />
-            )}
-          </tbody>
-        </table>
+        {blogs.map(blog =>
+          <Blog key={blog.id} blog={blog} />
+        )}
+      </div>
+    )
+  }
+
+  const CreateNewButton = () => {
+    return (
+      <div>
+        <button type="button" onClick={handleShowForm}>Create New</button>
+      </div>
+    )
+  }
+
+  const Cancel = () => {
+    return (
+      <div>
+        <button type="button" onClick={handleShowForm}>Cancel</button>
+      </div>
+    )
+  }
+
+  const NewBlogForm = () => {
+    return (
+      <div>
+        <form onSubmit={addBlog}>
+          <table>
+            <tbody>
+              <tr>
+                <td>Title:</td>
+                <td>
+                  <input value={newTitle} onChange={handleTitleChange} size="70" />
+                </td>
+              </tr>
+              <tr>
+                <td>Author:</td>
+                <td>
+                  <input value={newAuthor} onChange={handleAuthorChange} size="70" />
+                </td>
+              </tr>
+              <tr>
+                <td>URL:</td>
+                <td>
+                  <input value={newURL} onChange={handleURLChange} size="70" />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div>
+            <button type="submit">Create</button> <Cancel />
+          </div>
+        </form>
+        <p />
       </div>
     )
   }
 
   return (
     <div>
-      <form onSubmit={addBlog}>
-        <table>
-          <tbody>
-            <tr>
-              <td>Title:</td>
-              <td>
-                <input value={newTitle} onChange={handleTitleChange} />
-              </td>
-            </tr>
-            <tr>
-              <td>Author:</td>
-              <td>
-                <input value={newAuthor} onChange={handleAuthorChange} />
-              </td>
-            </tr>
-            <tr>
-              <td>URL:</td>
-              <td>
-                <input value={newURL} onChange={handleURLChange} />
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <div>
-          <button type="submit">Create</button>
-        </div>
-      </form>
-      <p />
-      {blogList()}
+      <div id="formstyle">
+        {showForm ? NewBlogForm() : CreateNewButton()}
+      </div>
+      <div>
+        {blogList()}
+      </div>
     </div>
   )
 
