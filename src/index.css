@@ -31,3 +31,13 @@ code {
   padding: 10px;
   margin-bottom: 10px;  
 }
+
+#detailsshown {
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border: none;
+  background-color: #ccccee;
+}
+
+#detailshidden {
+  display: none;
+}

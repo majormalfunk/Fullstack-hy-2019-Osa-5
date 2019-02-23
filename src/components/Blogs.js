@@ -48,16 +48,10 @@ const Blogs = (props) => {
         setNewAuthor('')
         setNewURL('')
         props.notHandler('success', `A new blog ${created.title} was added`)
-        //setNotificationMessage(`Henkilö ${created.name} lisättiin numerolla ${created.number}`)
-        //setNotificationClass("success")
-        //setTimeout(() => { setNotificationMessage(null) }, 5000)
       })
       .catch(error => {
         console.log(error.response.data.error)
         props.notHandler('error', error.response.data.error)
-        //setNotificationMessage(error.response.data.error)
-        //setNotificationClass("error")
-        //setTimeout(() => { setNotificationMessage(null) }, 5000)
       })
 
   }
