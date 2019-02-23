@@ -37,7 +37,6 @@ const Auth = (props) => {
       props.userHandler(user)
       setUsername('')
       setPassword('')
-      setName('')
     } catch (exception) {
       props.notHandler('error', 'Invalid username or password.')
     }
@@ -61,24 +60,42 @@ const Auth = (props) => {
       <div>
         <h2>Log in to application</h2>
         <form onSubmit={handleLogin}>
-          <div>
-            Username <input
-              type="text"
-              value={username}
-              name="Username"
-              onChange={({ target }) => setUsername(target.value)}
-            />
-          </div>
-          <div>
-            Password <input
-              type="password"
-              value={password}
-              name="Password"
-              onChange={({ target }) => setPassword(target.value)}
-            />
-          </div>
+            <table>
+              <tbody>
+                <tr>
+                  <td>Username</td>
+                  <td><input
+                    type="text"
+                    size="20"
+                    value={username}
+                    name="Username"
+                    onChange={({ target }) => setUsername(target.value)}
+                  />
+                  </td>
+                </tr>
+                <tr>
+                  <td>Password</td>
+                  <td>
+                    <input
+                      type="password"
+                      size="20"
+                      value={password}
+                      name="Password"
+                      onChange={({ target }) => setPassword(target.value)}
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    &nbsp;
+                  </td>
+                  <td>
+                    <button type="submit">Login</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           <p />
-          <button type="submit">Login</button>
         </form>
       </div>
     )

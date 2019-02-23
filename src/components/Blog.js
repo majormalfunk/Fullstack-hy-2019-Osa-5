@@ -1,10 +1,24 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Togglable from './Togglable'
+import blogService from '../services/blogs'
 
-
-const Blog = ({ blog }) => {
+const Blog = ({ blog, notHandler }) => {
+  const [likes, setLikes] = useState(blog.likes)
 
   const detailsRef = React.createRef()
+
+  const handleLike = async (event) => {
+    event.preventDefault()
+    const blogId = blog.id
+    console.log('Blog id', blogId)
+    try {
+      const updatedBlog = await blogService.like({ blog, blogId })
+      blog.likes = updatedBlog.likes
+      setLikes(blog.likes)
+    } catch (exception) {
+      notHandler('error', exception.response.data.error)
+    }
+  }
 
   const BlogTitle = () => {
     return (
@@ -32,7 +46,7 @@ const Blog = ({ blog }) => {
               <td><a href={blog.url}>{blog.url}</a></td>
             </tr>
             <tr>
-              <td>{blog.likes} likes <button type="submit">Like</button></td>
+              <td>{likes} likes <button type="button" onClick={handleLike}>Like</button></td>
             </tr>
             <tr>
               {AddedBy()}

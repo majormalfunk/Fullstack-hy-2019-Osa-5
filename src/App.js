@@ -20,11 +20,11 @@ const App = () => {
 
   const handleUser = (user) => {
     setUser(user)
-    blogService.setToken((user ? user.token : ''))
+    blogService.setUser(user ? user : '')
   }
 
   const blogs = () => {
-    return <Blogs notHandler={handleNotification} />
+    return <Blogs notHandler={handleNotification} userId={user.id} />
   }
 
   return (

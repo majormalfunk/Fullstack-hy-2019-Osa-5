@@ -34,9 +34,8 @@ const Blogs = (props) => {
     setShowForm(!showForm)
   }
 
-  const addBlog = (event) => {
+  const addBlog = async (event) => {
     event.preventDefault()
-
     const blogObject = {
       title: newTitle,
       author: newAuthor,
@@ -45,27 +44,25 @@ const Blogs = (props) => {
 
     console.log('New blog:', blogObject)
 
-    blogService
-      .create(blogObject)
-      .then(created => {
-        setBlogs(blogs.concat(created))
-        setNewTitle('')
-        setNewAuthor('')
-        setNewURL('')
-        props.notHandler('success', `A new blog ${created.title} was added`)
-      })
-      .catch(error => {
-        console.log(error.response.data.error)
-        props.notHandler('error', error.response.data.error)
-      })
-
+    try {
+      const created = await blogService.create(blogObject)
+      console.log('Created blog', created)
+      setBlogs(blogs.concat(created))
+      setNewTitle('')
+      setNewAuthor('')
+      setNewURL('')
+      props.notHandler('success', `A new blog ${created.title} was added`)
+    } catch (error) {
+      console.log(error.response.data.error)
+      props.notHandler('error', error.response.data.error)
+    }
   }
 
   const blogList = () => {
     return (
       <div>
         {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} />
+          <Blog key={blog.id} blog={blog} notHandler={props.notHandler} />
         )}
       </div>
     )
