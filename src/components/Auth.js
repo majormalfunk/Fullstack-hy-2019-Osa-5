@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
-
+import PropTypes from 'prop-types'
 import loginService from '../services/login'
 
-const Auth = (props) => {
+const Auth = ({ userHandler, notHandler }) => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [name, setName] = useState('')
@@ -20,7 +20,7 @@ const Auth = (props) => {
         setName(user.name)
       }
       setLogged(true)
-      props.userHandler(user)
+      userHandler(user)
     }
   }, [])
 
@@ -34,11 +34,11 @@ const Auth = (props) => {
       setName(user.name)
       setLogged(true)
       window.localStorage.setItem(storageKeyUser, JSON.stringify(user))
-      props.userHandler(user)
+      userHandler(user)
       setUsername('')
       setPassword('')
     } catch (exception) {
-      props.notHandler('error', 'Invalid username or password.')
+      notHandler('error', 'Invalid username or password.')
     }
   }
 
@@ -49,9 +49,9 @@ const Auth = (props) => {
       console.log('Logging out user ', logoutee.username)
       setLogged(false)
       window.localStorage.removeItem(storageKeyUser)
-      props.userHandler(null)
+      userHandler(null)
     } catch (exception) {
-      props.notHandler('error', 'Unable to logout. Strange.')
+      notHandler('error', 'Unable to logout. Strange.')
     }
   }
 
@@ -60,41 +60,41 @@ const Auth = (props) => {
       <div>
         <h2>Log in to application</h2>
         <form onSubmit={handleLogin}>
-            <table>
-              <tbody>
-                <tr>
-                  <td>Username</td>
-                  <td><input
-                    type="text"
+          <table>
+            <tbody>
+              <tr>
+                <td>Username</td>
+                <td><input
+                  type="text"
+                  size="20"
+                  value={username}
+                  name="Username"
+                  onChange={({ target }) => setUsername(target.value)}
+                />
+                </td>
+              </tr>
+              <tr>
+                <td>Password</td>
+                <td>
+                  <input
+                    type="password"
                     size="20"
-                    value={username}
-                    name="Username"
-                    onChange={({ target }) => setUsername(target.value)}
+                    value={password}
+                    name="Password"
+                    onChange={({ target }) => setPassword(target.value)}
                   />
-                  </td>
-                </tr>
-                <tr>
-                  <td>Password</td>
-                  <td>
-                    <input
-                      type="password"
-                      size="20"
-                      value={password}
-                      name="Password"
-                      onChange={({ target }) => setPassword(target.value)}
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    &nbsp;
-                  </td>
-                  <td>
-                    <button type="submit">Login</button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  &nbsp;
+                </td>
+                <td>
+                  <button type="submit">Login</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
           <p />
         </form>
       </div>
@@ -125,6 +125,11 @@ const Auth = (props) => {
   }
 
 
+}
+
+Auth.propTypes = {
+  userHandler: PropTypes.func.isRequired,
+  notHandler: PropTypes.func.isRequired
 }
 
 export default Auth

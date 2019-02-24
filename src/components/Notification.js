@@ -1,21 +1,27 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
-const Notification = (props) => {
+const Notification = ({ notMessage, notClass }) => {
 
-  if (props.message !== null && props.message !== '') {
-    if (props.class === "error") {
+  if (notMessage !== null && notMessage !== '') {
+    if (notClass === 'error') {
       return (
-        <div className="error">{props.message}</div>
+        <div className="error">{notMessage}</div>
       )
     } else {
       return (
-        <div className="success">{props.message}</div>
+        <div className="success">{notMessage}</div>
       )
     }
   } else {
     return null
   }
 
+}
+
+Notification.propTypes = {
+  notMessage: PropTypes.string,
+  notClass: PropTypes.string
 }
 
 export default Notification

@@ -30,7 +30,7 @@ const App = () => {
   return (
     <div>
       <h2>blogs</h2>
-      <Notification message={notificationMessage} class={notificationClass} />
+      <Notification notMessage={notificationMessage} notClass={notificationClass} />
       <Auth userHandler={handleUser} notHandler={handleNotification} />
       { (user ? blogs() : null) }
     </div>

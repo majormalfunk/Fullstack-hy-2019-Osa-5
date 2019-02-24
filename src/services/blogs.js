@@ -25,7 +25,7 @@ const create = async newObject => {
   }
   newObject.user = user.id
   const response = await axios.post(baseUrl, newObject, config)
-  response.data.user = {'username': user.username, 'name': user.name, 'id': user.id}
+  response.data.user = { 'username': user.username, 'name': user.name, 'id': user.id }
   return response.data
 }
 

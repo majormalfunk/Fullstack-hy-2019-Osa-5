@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
+import PropTypes from 'prop-types'
 import blogService from '../services/blogs'
 import Blog from './Blog'
 
-const Blogs = (props) => {
+const Blogs = ({ notHandler, userId }) => {
   const [blogs, setBlogs] = useState([])
   const [newTitle, setNewTitle] = useState('')
   const [newAuthor, setNewAuthor] = useState('')
@@ -54,31 +55,29 @@ const Blogs = (props) => {
 
     try {
       const created = await blogService.create(blogObject)
-      //console.log('Created blog', created)
+      console.log('Created blog', created)
       setBlogs(blogs.concat(created))
       setNewTitle('')
       setNewAuthor('')
       setNewURL('')
-      props.notHandler('success', `A new blog ${created.title} was added`)
+      notHandler('success', `A new blog ${created.title} was added`)
     } catch (error) {
       console.log(error.response.data.error)
-      props.notHandler('error', error.response.data.error)
+      notHandler('error', error.response.data.error)
     }
   }
 
   const likeBlog = async (event) => {
     event.preventDefault()
-    //console.log('Like handler called')
     const blogId = event.target.value
     const blog = blogs.filter(blog => blog.id === blogId)
-    //console.log('Liked', blog)
     try {
       const updated = await blogService.like({ blog, blogId })
       const updatedBlogs = blogs.map(b => b.id === updated.id ? updated : b)
       sortBlogs(updatedBlogs)
       setBlogs(updatedBlogs)
     } catch (exception) {
-      props.notHandler('error', exception.response.data.error)
+      notHandler('error', exception.response.data.error)
     }
   }
 
@@ -91,9 +90,9 @@ const Blogs = (props) => {
     try {
       await blogService.remove({ blogId })
       setBlogs(blogs.filter(blog => blog.id !== blogId))
-      props.notHandler('success', `The blog ${titleOfDeleted} was deleted`)
+      notHandler('success', `The blog ${titleOfDeleted} was deleted`)
     } catch (exception) {
-      props.notHandler('error', exception.response.data.error)
+      notHandler('error', exception.response.data.error)
     }
   }
 
@@ -106,7 +105,7 @@ const Blogs = (props) => {
             blog={blog}
             likeHandler={likeBlog}
             deleteHandler={deleteBlog}
-            showRemove={blog.user && props.userId === blog.user.id} />
+            showRemove={!blog.user || blog.user.id !== userId ? false : true} />
         )}
       </div>
     )
@@ -174,6 +173,11 @@ const Blogs = (props) => {
     </div>
   )
 
+}
+
+Blogs.propTypes = {
+  notHandler: PropTypes.func.isRequired,
+  userId: PropTypes.string.isRequired
 }
 
 export default Blogs
