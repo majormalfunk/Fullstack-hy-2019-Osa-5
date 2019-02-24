@@ -1,36 +1,39 @@
 import React, { useState } from 'react'
-import Togglable from './Togglable'
-import blogService from '../services/blogs'
 
-const Blog = ({ blog, notHandler }) => {
+const Blog = ({ blog, likeHandler, deleteHandler, showRemove }) => {
   const [likes, setLikes] = useState(blog.likes)
+  const [showDetails, setShowDetails] = useState('detailshidden')
 
-  const detailsRef = React.createRef()
+  const toggleVisibility = () => {
+    setShowDetails(showDetails === 'detailshidden' ? 'detailsshown' : 'detailshidden')
+  }
 
   const handleLike = async (event) => {
-    event.preventDefault()
-    const blogId = blog.id
-    console.log('Blog id', blogId)
-    try {
-      const updatedBlog = await blogService.like({ blog, blogId })
-      blog.likes = updatedBlog.likes
-      setLikes(blog.likes)
-    } catch (exception) {
-      notHandler('error', exception.response.data.error)
+    setLikes(blog.likes + 1)
+    likeHandler(event)
+  }
+
+  const handleRemove = async (event) => {
+    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
+      deleteHandler(event)
     }
   }
 
   const BlogTitle = () => {
-    return (
-      <div>{blog.title} by {blog.author}</div>
-    )
+    return <div>{blog.title} by {blog.author}</div>
   }
 
   const AddedBy = () => {
     if (blog.hasOwnProperty('user')) {
-      return (
-        <td>Added by {blog.user.name}</td>
-      )
+      return <td>Added by {blog.user.name}</td>
+    } else {
+      return <td>&nbsp;</td>
+    }
+  }
+
+  const RemoveButton = () => {
+    if (showRemove) {
+      return <td><button value={blog.id} type="button" onClick={handleRemove}>Remove</button></td>
     } else {
       return <td>&nbsp;</td>
     }
@@ -38,22 +41,27 @@ const Blog = ({ blog, notHandler }) => {
 
   return (
     <div width="80%">
-      <Togglable showCollapsed={BlogTitle()} shownStyle="detailsshown" ref={detailsRef} >
-        <div>{blog.title} by {blog.author}</div>
-        <table>
-          <tbody>
-            <tr>
-              <td><a href={blog.url}>{blog.url}</a></td>
-            </tr>
-            <tr>
-              <td>{likes} likes <button type="button" onClick={handleLike}>Like</button></td>
-            </tr>
-            <tr>
-              {AddedBy()}
-            </tr>
-          </tbody>
-        </table>
-      </Togglable >
+      <div>
+        <div id="detailsshown">
+          <div onClick={toggleVisibility}>{BlogTitle()}</div>
+          <table id={showDetails}>
+            <tbody>
+              <tr>
+                <td><a href={blog.url}>{blog.url}</a></td>
+              </tr>
+              <tr>
+                <td>{likes} likes <button value={blog.id} type="button" onClick={handleLike}>Like</button></td>
+              </tr>
+              <tr>
+                {AddedBy()}
+              </tr>
+              <tr>
+                {RemoveButton()}
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   )
 

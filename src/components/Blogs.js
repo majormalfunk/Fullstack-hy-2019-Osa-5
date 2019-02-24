@@ -9,11 +9,19 @@ const Blogs = (props) => {
   const [newURL, setNewURL] = useState('')
   const [showForm, setShowForm] = useState(false)
 
+  const fetchAll = async () => {
+    const unsorted = await blogService.getAll()
+    setBlogs(sortBlogs(unsorted))
+  }
+
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs(blogs)
-    )
+    fetchAll()
   }, [])
+
+  const sortBlogs = (unsorted) => {
+    console.log('Sorting blogs')
+    return unsorted.sort(function (a, b) { return b.likes - a.likes })
+  }
 
   const handleTitleChange = (event) => {
     //console.log("Title:", event.target.value)
@@ -42,11 +50,11 @@ const Blogs = (props) => {
       url: newURL
     }
 
-    console.log('New blog:', blogObject)
+    //console.log('New blog:', blogObject)
 
     try {
       const created = await blogService.create(blogObject)
-      console.log('Created blog', created)
+      //console.log('Created blog', created)
       setBlogs(blogs.concat(created))
       setNewTitle('')
       setNewAuthor('')
@@ -58,11 +66,47 @@ const Blogs = (props) => {
     }
   }
 
+  const likeBlog = async (event) => {
+    event.preventDefault()
+    //console.log('Like handler called')
+    const blogId = event.target.value
+    const blog = blogs.filter(blog => blog.id === blogId)
+    //console.log('Liked', blog)
+    try {
+      const updated = await blogService.like({ blog, blogId })
+      const updatedBlogs = blogs.map(b => b.id === updated.id ? updated : b)
+      sortBlogs(updatedBlogs)
+      setBlogs(updatedBlogs)
+    } catch (exception) {
+      props.notHandler('error', exception.response.data.error)
+    }
+  }
+
+  const deleteBlog = async (event) => {
+    event.preventDefault()
+    const blogId = event.target.value
+    const deletee = blogs.find(blog => blog.id === blogId)
+    const titleOfDeleted = `${deletee.title} by ${deletee.author}`
+    console.log('Deleting blog ', titleOfDeleted)
+    try {
+      await blogService.remove({ blogId })
+      setBlogs(blogs.filter(blog => blog.id !== blogId))
+      props.notHandler('success', `The blog ${titleOfDeleted} was deleted`)
+    } catch (exception) {
+      props.notHandler('error', exception.response.data.error)
+    }
+  }
+
   const blogList = () => {
     return (
       <div>
         {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} notHandler={props.notHandler} />
+          <Blog
+            key={blog.id}
+            blog={blog}
+            likeHandler={likeBlog}
+            deleteHandler={deleteBlog}
+            showRemove={blog.user && props.userId === blog.user.id} />
         )}
       </div>
     )
