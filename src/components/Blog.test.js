@@ -13,38 +13,49 @@ describe('Blog tests', () => {
 
   const mockHandler = jest.fn()
 
-  const component = render(
-    <Blog
-      blog={blog}
-      likeHandler={mockHandler}
-      deleteHandler={mockHandler}
-      showRemove={false} />
-  )
 
-  it('Initially only title and author are shown', () => {
+  test('Initially only title and author are shown', () => {
 
+    const component = render(
+      <Blog
+        blog={blog}
+        likeHandler={mockHandler}
+        deleteHandler={mockHandler}
+        showRemove={false} />
+    )
     expect(component.container).toHaveTextContent(
       `${blog.title} by ${blog.author}`
     )
 
     expect(component.container).not.toHaveTextContent(
+      `${blog.url}`
+    )
+    expect(component.container).not.toHaveTextContent(
       `${blog.likes} likes`
     )
 
   })
-  // EI ONNISTU CLICKKAAMAAN OTSIKKORIVIÄ. EI SITTEN MILLÄÄN.
-  /*
-  it('Clicking the title calls opens the details', async () => {
 
-    const div = component.getByText(`${blog.title} by ${blog.author}`)
+  test('Clicking the title calls opens the details', async () => {
+
+    const component = render(
+      <Blog
+        blog={blog}
+        likeHandler={mockHandler}
+        deleteHandler={mockHandler}
+        showRemove={false} />
+    )
+    const div = component.container.querySelector('.titleandauthor')
     fireEvent.click(div)
-
+    expect(component.container).toHaveTextContent(
+      `${blog.url}`
+    )
     expect(component.container).toHaveTextContent(
       `${blog.likes} likes`
     )
 
+
   })
-  */
 
 })
 

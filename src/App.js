@@ -20,6 +20,7 @@ const App = () => {
 
   const handleUser = (user) => {
     setUser(user)
+    console.log(user)
     blogService.setUser(user ? user : '')
   }
 
@@ -32,7 +33,7 @@ const App = () => {
       <h2>blogs</h2>
       <Notification notMessage={notificationMessage} notClass={notificationClass} />
       <Auth userHandler={handleUser} notHandler={handleNotification} />
-      { (user ? blogs() : null) }
+      {(user ? blogs() : null)}
     </div>
   )
 }
