@@ -29,7 +29,7 @@ const create = async newObject => {
   return response.data
 }
 
-const like = async ( props ) => {
+const update = async ( props ) => {
   const config = {
     headers: { Authorization: token },
   }
@@ -45,4 +45,4 @@ const remove = async ( props ) => {
   return response.data
 }
 
-export default { getAll, create, setUser, setToken, like, remove }
+export default { getAll, create, setUser, setToken, update, remove }

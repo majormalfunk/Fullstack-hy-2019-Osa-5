@@ -40,27 +40,33 @@ const Blog = ({ blog, likeHandler, deleteHandler, showRemove }) => {
     }
   }
 
+  const BlogDetails = () => {
+    return (
+      <table id={showDetails}>
+        <tbody>
+          <tr>
+            <td><a href={blog.url}>{blog.url}</a></td>
+          </tr>
+          <tr>
+            <td>{likes} likes <button value={blog.id} type="button" onClick={handleLike}>Like</button></td>
+          </tr>
+          <tr>
+            {AddedBy()}
+          </tr>
+          <tr>
+            {RemoveButton()}
+          </tr>
+        </tbody>
+      </table>
+    )
+  }
+
   return (
     <div width="80%">
       <div>
         <div id="detailsshown">
-          <div onClick={toggleVisibility}>{BlogTitle()}</div>
-          <table id={showDetails}>
-            <tbody>
-              <tr>
-                <td><a href={blog.url}>{blog.url}</a></td>
-              </tr>
-              <tr>
-                <td>{likes} likes <button value={blog.id} type="button" onClick={handleLike}>Like</button></td>
-              </tr>
-              <tr>
-                {AddedBy()}
-              </tr>
-              <tr>
-                {RemoveButton()}
-              </tr>
-            </tbody>
-          </table>
+          <div onClick={toggleVisibility} className="titleandauthor">{BlogTitle()}</div>
+          {showDetails === 'detailsshown' ? BlogDetails() : null}
         </div>
       </div>
     </div>

@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react'
+import { useField } from '../hooks/index'
 import PropTypes from 'prop-types'
 import loginService from '../services/login'
 
 const Auth = ({ userHandler, notHandler }) => {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+
+  const username = useField('text')
+  const password = useField('password')
+
   const [name, setName] = useState('')
   const [logged, setLogged] = useState(false)
 
@@ -28,15 +31,16 @@ const Auth = ({ userHandler, notHandler }) => {
     event.preventDefault()
     try {
       const user = await loginService.login({
-        username, password,
+        username: username.params.value,
+        password: password.params.value
       })
-      console.log('Logging in user ', username)
+      console.log('Logging in user', user.username)
       setName(user.name)
       setLogged(true)
       window.localStorage.setItem(storageKeyUser, JSON.stringify(user))
       userHandler(user)
-      setUsername('')
-      setPassword('')
+      username.reset()
+      password.reset()
     } catch (exception) {
       notHandler('error', 'Invalid username or password.')
     }
@@ -46,7 +50,7 @@ const Auth = ({ userHandler, notHandler }) => {
     event.preventDefault()
     try {
       const logoutee = JSON.parse(window.localStorage.getItem(storageKeyUser))
-      console.log('Logging out user ', logoutee.username)
+      console.log('Logging out user', logoutee.username)
       setLogged(false)
       window.localStorage.removeItem(storageKeyUser)
       userHandler(null)
@@ -64,26 +68,11 @@ const Auth = ({ userHandler, notHandler }) => {
             <tbody>
               <tr>
                 <td>Username</td>
-                <td><input
-                  type="text"
-                  size="20"
-                  value={username}
-                  name="Username"
-                  onChange={({ target }) => setUsername(target.value)}
-                />
-                </td>
+                <td><input size="20" name="Username" {...username.params} /></td>
               </tr>
               <tr>
                 <td>Password</td>
-                <td>
-                  <input
-                    type="password"
-                    size="20"
-                    value={password}
-                    name="Password"
-                    onChange={({ target }) => setPassword(target.value)}
-                  />
-                </td>
+                <td><input size="20" name="Password" {...password.params} /></td>
               </tr>
               <tr>
                 <td>
