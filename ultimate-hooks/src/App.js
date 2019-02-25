@@ -16,27 +16,6 @@ const useField = (type) => {
   }
 }
 
-/*
-
-const getAll = async () => {
-  const response = await axios.get(baseUrl)
-  return response.data
-}
-
-const create = async newObject => {
-  const config = {
-    headers: { Authorization: token },
-  }
-  newObject.user = user.id
-  const response = await axios.post(baseUrl, newObject, config)
-  response.data.user = { 'username': user.username, 'name': user.name, 'id': user.id }
-  return response.data
-}
-
-
-*/
-
-
 const useResource = (baseUrl) => {
   const [resources, setResources] = useState([])
 
@@ -48,7 +27,6 @@ const useResource = (baseUrl) => {
   useEffect(() => {
     getAll()
   }, [])
-  // ...
 
   const create = async (resource) => {
     const response = await axios.post(baseUrl, resource)
